@@ -1,0 +1,31 @@
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #d0dbdba2 0%, #eeebeb  100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        /* Tabs wrapper */
+        .tabs-container {
+            display: flex;
+            justify-content: center;   /* centers horizontally */
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Tab navigation */
+        .tab-nav {
+            display: flex;
+            gap: 14px;                 /* spacing between tabs */
+        }
+        .tab {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s, color 0.3s;
+        }

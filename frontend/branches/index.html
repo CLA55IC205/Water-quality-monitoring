@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Warning Notification Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* =========================
+   BASIC LAYOUT
+========================= */
+body {
+    font-family: Arial, sans-serif;
+    background: #0f1c2e;
+    color: #fff;
+    padding: 40px;
+}
+
+/* =========================
+   WARNING STATUS
+========================= */
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.status-label {
+    font-weight: bold;
+}
+
+/* =========================
+   FILTER ICON STATES
+========================= */
+.filter-icon {
+    font-size: 1.6rem;
+}
+
+.filter-optimal {
+    color: #28a745;
+}
+
+.filter-moderate {
+    color: #ffc107;
+}
+
+.filter-warning {
+    color: #dc3545;
+    animation: pulse 1.2s infinite;
+}
+
+/* Pulse animation */
+@keyframes pulse {
+    0%   { transform: scale(1);   opacity: 1; }
+    50%  { transform: scale(1.2); opacity: 0.6; }
+    100% { transform: scale(1);   opacity: 1; }
+}
+
+/* =========================
+   NOTIFICATION BELL
+========================= */
+.bell-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 1.8rem;
+}
+
+.notification-dropdown {
+    position: absolute;
+    right: 0;
+    top: 40px;
+    width: 280px;
+    background: #18263f;
+    border-radius: 10px;
+    padding: 10px;
+    display: none;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+.notification-dropdown.active {
+    display: block;
+}
+
+.notification-item {
+    background: #23345a;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.notification-item strong {
+    color: #ff6b6b;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Water Quality Warning Demo</h2>
+
+<!-- WARNING STATUS -->
+<div class="status-item">
+    <span class="status-label">FILTER STATUS:</span>
+    <span id="filterStatusIcon" class="filter-icon"></span>
+</div>
+
+<!-- NOTIFICATION BELL -->
+<div class="bell-container" id="bell">
+    🔔
+    <div class="notification-dropdown" id="notificationDropdown">
+        <div id="notificationList"></div>
+    </div>
+</div>
+
+<!-- TEST BUTTONS -->
+<div style="margin-top:20px;">
+    <button onclick="updateFilterStatus(320)">Set TDS 320</button>
+    <button onclick="updateFilterStatus(460)">Set TDS 460</button>
+    <button onclick="updateFilterStatus(550)">Set TDS 550</button>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    // Initial example value
+    updateFilterStatus(320);
+
+});
+
+/* =========================
+   FILTER STATUS LOGIC
+========================= */
+function updateFilterStatus(tdsValue) {
+    const icon = document.getElementById("filterStatusIcon");
+
+    icon.className = "filter-icon";
+
+    if (tdsValue <= 400) {
+        icon.innerHTML = "🍃";
+        icon.classList.add("filter-optimal");
+
+    } else if (tdsValue <= 500) {
+        icon.innerHTML = "⚠️";
+        icon.classList.add("filter-moderate");
+
+    } else {
+        icon.innerHTML = "🚨";
+        icon.classList.add("filter-warning");
+
+        addNotification(
+            "High TDS Warning",
+            `TDS level is ${tdsValue} ppm. Filter may be clogged or needs replacement.`
+        );
+    }
+}
+
+/* =========================
+   NOTIFICATIONS
+========================= */
+function addNotification(title, message) {
+    const list = document.getElementById("notificationList");
+
+    const item = document.createElement("div");
+    item.className = "notification-item";
+
+    item.innerHTML = `
+        <strong>${title}</strong>
+        <p>${message}</p>
+    `;
+
+    list.prepend(item);
+}
+
+/* =========================
+   BELL TOGGLE
+========================= */
+document.getElementById("bell").addEventListener("click", () => {
+    document.getElementById("notificationDropdown")
+        .classList.toggle("active");
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,337 @@
+        .sensor-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .sensor-card {
+                   background-color:transparent;
+       backdrop-filter: blur(8px);
+       -webkit-backdrop-filter: blur(8px);
+       border: 1px solid rgba(255, 255, 255, 0.281);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            border: 1px solid #eaeaea;
+            display: flex;
+            flex-direction: column;
+        }
+        .sensor-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+
+
+
+/* ===============================
+              SENSOR CARD STYLES
+        ================================ */
+        .sensor-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 20px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .sensor-info {
+            flex: 1;
+        }
+        
+        .sensor-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 3px;
+        }
+        
+        .sensor-unit {
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+
+        /* ===============================
+              CHART & INFO STRIP STYLES
+        ================================ */
+        
+        .chart-row {
+            display: flex;
+            gap: 60px; /* Minimal gap between chart and info strip */
+            margin-bottom: 12px;
+            align-items: stretch;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 130px;
+            flex: 0 0 120px; /* Fixed width for chart */
+            margin: 0;
+            padding: 0;
+        }
+        
+        .chart-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }
+
+        /* ===============================
+            INFO STRIP STYLES
+        ================================ */
+        
+        .info-strip {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px;
+            border-left: 3px solid;
+            margin-left: 0;
+        }
+        
+        .strip-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .strip-content {
+            font-size: 11px;
+            color: #5a6c7d;
+            line-height: 1.4;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .status-label {
+            color: #666;
+            font-size: 11px;
+        }
+        
+        .status-value {
+            font-weight: 600;
+            font-size: 11px;
+        }
+        
+        .sensor-values {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .value-box {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        
+        .value-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .value-number {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+        
+        .value-label {
+            font-size: 11px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .percentage-display {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: 800;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .percentage-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+
+                /* Color themes for sensors */
+        .ph-sensor .sensor-icon { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .ph-sensor .info-strip { border-left-color: #3498db; }
+        .ph-sensor .percentage-display { color: #3498db; }
+        
+        .temp-sensor .sensor-icon { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .temp-sensor .info-strip { border-left-color: #e74c3c; }
+        .temp-sensor .percentage-display { color: #e74c3c; }
+        
+        .tds-sensor .sensor-icon { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        .tds-sensor .info-strip { border-left-color: #2ecc71; }
+        .tds-sensor .percentage-display { color: #2ecc71; }
+        
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        
+        .status-optimal { background-color: #2ecc71; }
+        .status-warning { background-color: #f39c12; }
+        .status-critical { background-color: #e74c3c; }
+        
+        .sensor-status {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-top: 5px;
+            display: inline-block;
+        }
+        
+        .ph-sensor .sensor-status { background-color: rgba(52, 152, 219, 0.1); color: #3498db; }
+        .temp-sensor .sensor-status { background-color: rgba(231, 76, 60, 0.1); color: #e74c3c; }
+        .tds-sensor .sensor-status { background-color: rgba(46, 204, 113, 0.1); color: #2ecc71; }
+        
+        .last-updated {
+            text-align: center;
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 1200px) {
+            .sensor-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sensor-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-row {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .chart-container {
+                flex: 0 0 120px;
+                width: 100%;
+            }
+            
+            .info-strip {
+                width: 100%;
+            }
+            
+            body {
+                padding: 10px;
+            }
+            
+            .dashboard-container {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .sensor-values {
+                grid-template-columns: 1fr;
+            }
+        }
+
+
+
+/* Base icon */
+.filter-icon {
+    font-size: 2rem;
+    transition: all 0.3s ease;
+}
+
+/* States */
+.optimal {
+    color: #28a745; /* green leaf */
+}
+
+.moderate {
+    color: #ffc107; /* yellow triangle */
+}
+
+.warning {
+    color: #dc3545; /* red warning */
+    animation: pulse 1.2s infinite;
+}
+
+/* Pulse animation for warning */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.15); opacity: 0.6; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Notification items in dropdown */
+.notification-item {
+    background: #f8f9fa;
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.notification-item strong {
+    color: #dc3545;
+    display: block;
+    font-size: 13px;
+}
+
+.notification-item p {
+    color: #495057;
+    font-size: 12px;
+    margin: 2px 0;
+}
+
+.notification-item small {
+    color: #6c757d;
+    font-size: 10px;
+}

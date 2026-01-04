@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensor Monitoring Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <!-- Leaflet CSS & JS for maps -->
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+
+ 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
+         <!-- CSS files -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/Sensor-cards.css">
+    <link rel="stylesheet" href="css/maps.css">
+    <link rel="stylesheet" href="css/system-health.css">
+    <link rel="stylesheet" href="css/navbar-sidebar.css">
+
+
+
+    <style>
+
+
+    </style>
+</head>
+<body>
+
+
+        <!-- ===============================
+            NAVBAR
+        ================================ -->
+        <nav id="menu-bar">
+            <img src="logo.png" alt="Water Monitor Logo" id="logo">
+
+            <!-- Hamburger -->
+            <button id="hamburger">☰</button>
+
+            <!-- Tabs -->
+            <div class="tabs-container">
+        <nav class="tab-nav">
+            <button class="tab active" data-target="dashboard">DASHBOARD</button>
+            <button class="tab" data-target="reports">REPORTS</button>
+        </nav>
+    </div>
+
+
+        <!-- Right icons (always row) -->
+        <div class="nav-right-icons">
+            <button id="notifyBtn" class="icon-btn">
+                <i class="bi bi-bell"></i>
+                <span class="notify-dot"></span>
+            </button>
+
+            <button id="settingsBtn" class="icon-btn">
+                <i class="bi bi-gear"></i>
+            </button>
+        </div>
+
+    </div>
+</nav>
+
+        <div id="notificationsCard" class="dropdown-card">
+            <h6>Notifications</h6>
+
+            <div id="notificationList" class="notification-list"></div>
+
+
+            <div class="notification-item">
+                <strong>TDS Alert</strong>
+                <span>High TDS detected (320 ppm)</span>
+            </div>
+
+            <div class="notification-item">
+                <strong>pH Stable</strong>
+                <span>pH remains optimal</span>
+            </div>
+
+            <div class="notification-item">
+                <strong>Battery</strong>
+                <span>Battery at 85%</span>
+            </div>
+        </div>
+
+        <div id="settingsCard" class="dropdown-card">
+            <h6>System Settings</h6>
+
+            <!-- Map location -->
+            <div class="setting-group">
+                <label>Latitude</label>
+                <input type="number" id="latInput" step="0.000001" placeholder="e.g. -15.3875">
+            </div>
+
+            <div class="setting-group">
+                <label>Longitude</label>
+                <input type="number" id="lngInput" step="0.000001" placeholder="e.g. 28.3228">
+            </div>
+
+            <button id="updateLocation" class="btn btn-primary btn-sm mt-2">
+                Update Map Location
+            </button>
+
+            <hr>
+
+            <!-- Water system settings -->
+            <div class="setting-group">
+                <label>Alert Threshold (TDS ppm)</label>
+                <input type="number" value="400">
+            </div>
+
+            <div class="setting-group">
+                <label>Auto Refresh</label>
+                <select>
+                    <option>30 seconds</option>
+                    <option>1 minute</option>
+                    <option>5 minutes</option>
+                </select>
+            </div>
+        </div>
+
+
+
+<!-- ===============================
+     SIDEBAR (MOBILE)
+================================ -->
+<div class="tab-content pt-5 mt-4">
+    <div class="app-sidebar">
+        <ul class="sidebar-menu">
+            <li>
+                <a class="nav-link" data-bs-toggle="tab" href="#dashboard">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+            </li>
+            <li>
+                <a class="nav-link" data-bs-toggle="tab" href="#reports">
+                    <i class="bi bi-bar-chart"></i> Reports
+                </a>
+            </li>
+        </ul>
+    </div>
+
+<!-- ===============================
+        DASHBOARD CONTENT
+================================ -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="tab-pane fade show active" id="dashboard">
+    <div class="sensor-container">
+        
+        <div class="sensor-card ph-sensor">
+            <div class="sensor-header">
+                <div class="sensor-icon">pH</div>
+                <div class="sensor-info">
+                    <div class="sensor-name">pH Sensor</div>
+                    <div class="sensor-unit">Acidity/Alkalinity Level</div>
+                    <div class="sensor-status">Optimal Range: 6.5 - 7.5</div>
+                </div>
+            </div>
+            
+            <div class="chart-row">
+                <div class="chart-container">
+                    <canvas id="phChart"></canvas>
+                    <div class="percentage-display">
+                        <span id="phValueDisplay">6.3</span>
+                        <span class="percentage-label">pH Level</span>
+                    </div>
+                </div>
+                
+                <div class="info-strip">
+                    <div class="strip-title">pH Information</div>
+                    <div class="strip-content">
+                        
+                            <div class="status-item">
+                                <span class="status-label">Ideal Range:</span>
+                                <span class="status-value">6.5 - 7.5</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Stability:</span>
+                                <span class="status-value">94%</span>
+                            </div>
+
+                        <div class="status-item">
+                            <span class="status-label">WARNING:</span>
+                            <span class="status-value">
+                                <span id="phStatusIcon" class="filter-icon"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sensor-card temp-sensor">
+            <div class="sensor-header">
+                <div class="sensor-icon">°C</div>
+                <div class="sensor-info">
+                    <div class="sensor-name">Temperature Sensor</div>
+                    <div class="sensor-unit">Water Temperature</div>
+                    <div class="sensor-status">Optimal Range: 22°C - 26°C</div>
+                </div>
+            </div>
+            
+            <div class="chart-row">
+                <div class="chart-container">
+                    <canvas id="tempChart"></canvas>
+                    <div class="percentage-display">
+                        <span id="tempValueDisplay">32</span>
+                        <span class="percentage-label">°C</span>
+                    </div>
+                </div>
+                
+                <div class="info-strip">
+                    <div class="strip-title">Temp Information</div>
+                    <div class="strip-content">
+
+                             <div class="status-item">
+                                <span class="status-label">Ideal Range:</span>
+                                <span class="status-value">22°C - 26°C</span>
+                            </div>
+
+                            <div class="status-item">
+                                <span class="status-label">24h Change:</span>
+                                <span class="status-value">+0.3°C</span>
+                            </div>
+                        <div class="status-item">
+                            <span class="status-label">WARNING:</span>
+                            <span class="status-value">
+                                <span id="heatStatusIcon" class="filter-icon"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sensor-card tds-sensor">
+            <div class="sensor-header">
+                <div class="sensor-icon">TDS</div>
+                <div class="sensor-info">
+                    <div class="sensor-name">TDS Sensor</div>
+                    <div class="sensor-unit">Total Dissolved Solids</div>
+                    <div class="sensor-status">Optimal Range: 200 - 400 ppm</div>
+                </div>
+            </div>
+            
+            <div class="chart-row">
+                <div class="chart-container">
+                    <canvas id="tdsChart"></canvas>
+                    <div class="percentage-display">
+                        <span id="tdsValueDisplay">450</span>
+                        <span class="percentage-label">ppm</span>
+                    </div>
+                </div>
+                
+                <div class="info-strip">
+                    <div class="strip-title">TDS Information</div>
+                    <div class="strip-content">
+
+                             <div class="status-item">
+                                <span class="status-label">Ideal Range:</span>
+                                <span class="status-value">200 - 400 ppm</span>
+                            </div>
+
+                            <div class="status-item">
+                                <span class="status-label">Change Rate:</span>
+                                <span class="status-value">+5 ppm/day</span>
+                            </div>
+                        <div class="status-item">
+                            <span class="status-label">WARNING:</span>
+                            <span class="status-value">
+                                <span id="filterStatusIcon" class="filter-icon"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+            </div>
+        </div>    <!-- Bottom row: map + details -->
+
+    <div class="bottom-row">
+        <div class="map-card">
+            <h3>Location of Water Body</h3>
+            <div id="map" style="height: 300px; background: #eee; border-radius: 12px;"></div>
+        </div>
+        <div class="details-card">
+            <h3>System Health</h3>
+            <div class="status-group">
+                <div class="status-item">
+                    <div class="icon-container">
+                        <span class="icon">🔋</span>
+                    </div>
+                    <div class="status-info">
+                        <span class="label">Battery Life</span>
+                        <div class="battery-meta">
+                            <span id="batteryValue" class="value-text good">85%</span>
+                            <div class="battery-bar-container">
+                                <div id="batteryLevel" class="battery-fill" style="width: 85%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="status-item">
+                    <div class="icon-container">
+                        <span class="icon">📶</span>
+                        <span class="pulse-dot"></span> </div>
+                    <div class="status-info">
+                        <span class="label">Network Strength</span>
+                        <span id="signalStatus" class="value-text">Excellent (LTE)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+ </div>
+</div>
+        
+        <div class="last-updated">
+            Last updated: <span id="updateTime">Just now</span> | Auto-refresh every 30 seconds
+        </div>
+    </div>
+
+    <!-- JS files -->
+<script src="js/maps.js"></script>
+<script src="js/Sensor-cards.js"></script>
+<script src="js/system-health.js"></script>
+<script src="js/navbar_sidebar.js"></script>
+
+</body>
+</html>
