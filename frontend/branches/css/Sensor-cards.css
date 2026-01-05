@@ -335,3 +335,34 @@
     color: #6c757d;
     font-size: 10px;
 }
+
+/* Make Notifications Dropdown Scrollable */
+#notificationsCard {
+    max-height: 300px;        /* adjust as needed */
+    overflow-y: auto;         /* vertical scroll */
+    padding: 1rem;
+    border-radius: 12px;
+    scroll-behavior: smooth;  /* optional smooth scrolling */
+}
+
+/* Make Settings Dropdown Scrollable */
+#settingsCard {
+    max-height: 400px;        /* allow taller content */
+    overflow-y: auto;
+    padding: 1rem;
+    border-radius: 12px;
+    scroll-behavior: smooth;
+}
+
+/* Optional: Custom scrollbar style */
+#notificationsCard::-webkit-scrollbar,
+#settingsCard::-webkit-scrollbar {
+    width: 6px;
+}
+
+#notificationsCard::-webkit-scrollbar-thumb,
+#settingsCard::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+}
+

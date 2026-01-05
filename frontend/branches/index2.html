@@ -76,24 +76,7 @@
 
         <div id="notificationsCard" class="dropdown-card">
             <h6>Notifications</h6>
-
             <div id="notificationList" class="notification-list"></div>
-
-
-            <div class="notification-item">
-                <strong>TDS Alert</strong>
-                <span>High TDS detected (320 ppm)</span>
-            </div>
-
-            <div class="notification-item">
-                <strong>pH Stable</strong>
-                <span>pH remains optimal</span>
-            </div>
-
-            <div class="notification-item">
-                <strong>Battery</strong>
-                <span>Battery at 85%</span>
-            </div>
         </div>
 
         <div id="settingsCard" class="dropdown-card">
@@ -117,19 +100,27 @@
             <hr>
 
             <!-- Water system settings -->
-            <div class="setting-group">
-                <label>Alert Threshold (TDS ppm)</label>
-                <input type="number" value="400">
-            </div>
+                <!-- pH Sensor -->
+                <div class="setting-group">
+                    <label>pH Ideal Range</label>
+                    <input type="text" id="phRangeInput" placeholder="e.g. 6.5-7.5">
+                </div>
 
-            <div class="setting-group">
-                <label>Auto Refresh</label>
-                <select>
-                    <option>30 seconds</option>
-                    <option>1 minute</option>
-                    <option>5 minutes</option>
-                </select>
-            </div>
+                <!-- Temperature Sensor -->
+                <div class="setting-group">
+                    <label>Temperature Ideal Range</label>
+                    <input type="text" id="tempRangeInput" placeholder="e.g. 22-26">
+                </div>
+
+                <!-- TDS Sensor -->
+                <div class="setting-group">
+                    <label>TDS Ideal Range</label>
+                    <input type="text" id="tdsRangeInput" placeholder="e.g. 200-400">
+                </div>
+
+                <button id="updateRangesBtn" class="btn btn-primary btn-sm mt-2">
+                    Update Ranges
+                </button>
         </div>
 
 
@@ -175,7 +166,7 @@
                 <div class="chart-container">
                     <canvas id="phChart"></canvas>
                     <div class="percentage-display">
-                        <span id="phValueDisplay">6.3</span>
+                        <span id="phValueDisplay">0</span>
                         <span class="percentage-label">pH Level</span>
                     </div>
                 </div>
@@ -183,15 +174,16 @@
                 <div class="info-strip">
                     <div class="strip-title">pH Information</div>
                     <div class="strip-content">
-                        
+                                                    
                             <div class="status-item">
                                 <span class="status-label">Ideal Range:</span>
-                                <span class="status-value">6.5 - 7.5</span>
+                                <span id="phIdealRange" class="status-value">6.5 - 7.5</span>
                             </div>
                             <div class="status-item">
                                 <span class="status-label">Stability:</span>
-                                <span class="status-value">94%</span>
+                                <span id="stabilityValue-device_001" class="status-value">--%</span>
                             </div>
+
 
                         <div class="status-item">
                             <span class="status-label">WARNING:</span>
@@ -204,7 +196,7 @@
             </div>
         </div>
         
-        <div class="sensor-card temp-sensor">
+        <div class="sensor-card temp-sensor" data-device-id="device_001">
             <div class="sensor-header">
                 <div class="sensor-icon">°C</div>
                 <div class="sensor-info">
@@ -218,7 +210,7 @@
                 <div class="chart-container">
                     <canvas id="tempChart"></canvas>
                     <div class="percentage-display">
-                        <span id="tempValueDisplay">32</span>
+                        <span id="tempValueDisplay">0</span>
                         <span class="percentage-label">°C</span>
                     </div>
                 </div>
@@ -227,14 +219,14 @@
                     <div class="strip-title">Temp Information</div>
                     <div class="strip-content">
 
-                             <div class="status-item">
+                            <div class="status-item">
                                 <span class="status-label">Ideal Range:</span>
-                                <span class="status-value">22°C - 26°C</span>
+                                <span id="tempIdealRange" class="status-value">22°C - 26°C</span>
                             </div>
 
                             <div class="status-item">
                                 <span class="status-label">24h Change:</span>
-                                <span class="status-value">+0.3°C</span>
+                                <span id="tempChangeValue-device_001" class="status-value">+0.0°C</span>
                             </div>
                         <div class="status-item">
                             <span class="status-label">WARNING:</span>
@@ -261,7 +253,7 @@
                 <div class="chart-container">
                     <canvas id="tdsChart"></canvas>
                     <div class="percentage-display">
-                        <span id="tdsValueDisplay">450</span>
+                        <span id="tdsValueDisplay">0</span>
                         <span class="percentage-label">ppm</span>
                     </div>
                 </div>
@@ -270,15 +262,16 @@
                     <div class="strip-title">TDS Information</div>
                     <div class="strip-content">
 
-                             <div class="status-item">
+                            <div class="status-item">
                                 <span class="status-label">Ideal Range:</span>
-                                <span class="status-value">200 - 400 ppm</span>
+                                <span id="tdsIdealRange" class="status-value">200 - 400 ppm</span>
                             </div>
 
                             <div class="status-item">
                                 <span class="status-label">Change Rate:</span>
-                                <span class="status-value">+5 ppm/day</span>
+                                <span id="tdsChangeRate-device_001" class="status-value">-- ppm/day</span>
                             </div>
+
                         <div class="status-item">
                             <span class="status-label">WARNING:</span>
                             <span class="status-value">

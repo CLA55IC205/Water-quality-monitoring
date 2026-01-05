@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
+from pydantic import ConfigDict
 
 class MonitoringDataSchema(BaseModel):
     device_id: str
@@ -9,8 +10,7 @@ class MonitoringDataSchema(BaseModel):
     temperature: float
     timestamp: Optional[datetime] = None  # optional, backend can fill
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class UserLogin(BaseModel):
     username: str

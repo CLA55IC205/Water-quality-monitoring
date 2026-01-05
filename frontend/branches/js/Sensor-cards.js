@@ -5,6 +5,11 @@ let phValue = 7.0;
 let tempValue = 33;
 let tdsValue = 300;
 
+let phAlertActive = false;
+let tempAlertActive = false;
+let tdsAlertActive = false;
+
+
 // ==============================
 // DOM ELEMENTS
 // ==============================
@@ -12,6 +17,11 @@ const filterIcon = document.getElementById("filterStatusIcon");
 const heatStatusIcon = document.getElementById("heatStatusIcon");
 const phStatusIcon = document.getElementById("phStatusIcon");
 const notificationList = document.getElementById("notificationList");
+
+const phValueDisplay = document.getElementById("phValueDisplay");
+const tempValueDisplay = document.getElementById("tempValueDisplay");
+const tdsValueDisplay = document.getElementById("tdsValueDisplay");
+
 
 // ==============================
 // NOTIFICATIONS (single source)
@@ -62,6 +72,9 @@ function playNotificationSound() {
 // STATUS ICON UPDATERS
 // ==============================
 function updatePhStatus(val) {
+
+    phAlertActive = false;
+
     phStatusIcon.className = "filter-icon";
 
     if (val >= 6.5 && val <= 7.5) {
@@ -71,13 +84,20 @@ function updatePhStatus(val) {
         phStatusIcon.textContent = "⚠️";
         phStatusIcon.classList.add("moderate");
     } else {
-        phStatusIcon.textContent = "🚨";
-        phStatusIcon.classList.add("warning");
-        addNotification("pH Level Alert", `pH is ${val}`);
+    phStatusIcon.textContent = "🚨";
+    phStatusIcon.classList.add("warning");
+
+        if (!phAlertActive) {
+            addNotification("pH Level Alert", `pH is ${val}`);
+            phAlertActive = true;
+        }
     }
 }
 
 function updateHeatStatus(val) {
+
+    tempAlertActive = false;
+
     heatStatusIcon.className = "filter-icon";
 
     if (val <= 25) {
@@ -87,13 +107,20 @@ function updateHeatStatus(val) {
         heatStatusIcon.textContent = "⚠️";
         heatStatusIcon.classList.add("moderate");
     } else {
-        heatStatusIcon.textContent = "🚨";
-        heatStatusIcon.classList.add("warning");
-        addNotification("High Temperature", `Temperature is ${val}°C`);
+    heatStatusIcon.textContent = "🚨";
+    heatStatusIcon.classList.add("warning");
+
+        if (!tempAlertActive) {
+            addNotification("High Temperature", `Temperature is ${val}°C`);
+            tempAlertActive = true;
+        }
     }
 }
 
 function updateFilterStatus(val) {
+
+    tdsAlertActive = false;
+
     filterIcon.className = "filter-icon";
 
     if (val <= 700) {
@@ -103,9 +130,13 @@ function updateFilterStatus(val) {
         filterIcon.textContent = "⚠️";
         filterIcon.classList.add("moderate");
     } else {
-        filterIcon.textContent = "🚨";
-        filterIcon.classList.add("warning");
-        addNotification("High TDS Warning", `TDS is ${val} ppm`);
+    filterIcon.textContent = "🚨";
+    filterIcon.classList.add("warning");
+
+        if (!tdsAlertActive) {
+            addNotification("High TDS Warning", `TDS is ${val} ppm`);
+            tdsAlertActive = true;
+        }
     }
 }
 
@@ -181,6 +212,16 @@ async function fetchLatestData() {
         tempValue = data.temperature;
         tdsValue = data.tds_value;
 
+        if (data.ph_value == null || data.temperature == null || data.tds_value == null) {
+            throw new Error("Invalid backend response");
+        }
+
+
+        phValueDisplay.textContent = phValue.toFixed(2);
+        tempValueDisplay.textContent = tempValue;
+        tdsValueDisplay.textContent = tdsValue;
+
+
         updatePhStatus(phValue);
         updateHeatStatus(tempValue);
         updateFilterStatus(tdsValue);
@@ -202,7 +243,7 @@ document.addEventListener("DOMContentLoaded", () => {
     tempChart = createSensorChart("tempChart", 25, 15, 40, "#e74c3c");
     tdsChart = createSensorChart("tdsChart", 300, 0, 1500, "#2ecc71");
 
-    setInterval(fetchLatestData, 5000);
+    setInterval(fetchLatestData, 1000); // Every 30 seconds
     fetchLatestData();
 });
 
@@ -219,3 +260,216 @@ toggle?.addEventListener("click", () => {
 overlay?.addEventListener("click", () => {
     document.body.classList.remove("sidebar-open");
 });
+
+// ==============================
+// 24H CHANGE & STABILITY UPDATES
+// ==============================
+
+async function fetchAllDeviceIds() {
+    try {
+        const res = await fetch("http://localhost:8000/monitoring/list");
+        if (!res.ok) throw new Error("Failed to fetch device list");
+
+        const devices = await res.json(); // [{id: "device_001"}, ...]
+        return devices.map(d => d.id);    // ["device_001", "device_002", ...]
+    } catch (err) {
+        console.error("Error fetching device IDs:", err);
+        return [];
+    }
+}
+
+async function updateAllDevices24hChange() {
+    const deviceIds = await fetchAllDeviceIds(); // get all device IDs
+    deviceIds.forEach(id => update24hTemperatureChange(id));
+}
+
+// Call every 1 second
+setInterval(updateAllDevices24hChange, 1000);
+
+// Initial call on page load
+updateAllDevices24hChange();
+
+async function update24hTemperatureChange(deviceId) {
+    try {
+        const res = await fetch(`http://localhost:8000/history/${deviceId}`);
+        if (!res.ok) throw new Error(`Failed to fetch history for ${deviceId}`);
+
+        const data = await res.json();
+        if (data.length < 2) return; // Not enough data
+
+        const now = new Date();
+        const past24h = new Date(now.getTime() - 24*60*60*1000);
+
+        let closest = data[0];
+        for (let i = 0; i < data.length; i++) {
+            const ts = new Date(data[i].timestamp);
+            if (Math.abs(ts - past24h) < Math.abs(new Date(closest.timestamp) - past24h)) {
+                closest = data[i];
+            }
+        }
+
+        const latestTemp = data[data.length-1].temperature;
+        const pastTemp = closest.temperature;
+
+        const diff = (latestTemp - pastTemp).toFixed(1);
+        const sign = diff >= 0 ? "+" : "";
+
+        // Dynamic span ID based on device ID
+        const tempChangeElement = document.getElementById(`tempChangeValue-${deviceId}`);
+        if (tempChangeElement) {
+            tempChangeElement.textContent = `${sign}${diff}°C`;
+        }
+
+    } catch (err) {
+        console.error(`Error updating 24h change for ${deviceId}:`, err);
+    }
+}
+
+// ==============================
+// STABILITY UPDATES
+// ==============================
+
+async function updateStability(deviceId) {
+    try {
+        const res = await fetch(`http://localhost:8000/history/${deviceId}`);
+        if (!res.ok) throw new Error(`Failed to fetch history for ${deviceId}`);
+
+        const data = await res.json();
+        if (data.length < 2) return;
+
+        const latest = data[data.length - 1];
+        const past24hTime = new Date(new Date().getTime() - 24*60*60*1000);
+
+        // Find reading closest to 24h ago
+        let closest = data[0];
+        for (let r of data) {
+            const ts = new Date(r.timestamp);
+            if (Math.abs(ts - past24hTime) < Math.abs(new Date(closest.timestamp) - past24hTime)) {
+                closest = r;
+            }
+        }
+
+        // Calculate relative change for pH, temperature, or TDS
+        const stability = {
+            ph: Math.max(0, 100 - Math.abs(latest.ph_value - closest.ph_value) * 20), // scale to % (example)
+            temp: Math.max(0, 100 - Math.abs(latest.temperature - closest.temperature) * 10),
+            tds: Math.max(0, 100 - Math.abs(latest.tds_value - closest.tds_value) * 0.2)
+        };
+
+        // Update the element (example: showing temperature stability)
+        const stabilityElement = document.getElementById(`stabilityValue-${deviceId}`);
+        if (stabilityElement) {
+            stabilityElement.textContent = `${Math.round(stability.temp)}%`;
+        }
+
+    } catch (err) {
+        console.error(`Error updating stability for ${deviceId}:`, err);
+    }
+}
+
+async function updateAllDevicesStability() {
+    const deviceIds = await fetchAllDeviceIds();
+    deviceIds.forEach(id => updateStability(id));
+}
+
+// Call every 1 second
+setInterval(updateAllDevicesStability, 1000);
+updateAllDevicesStability();
+
+
+// ==============================
+// TDS CHANGE RATE UPDATES
+// ==============================
+
+async function updateTDSChangeRate(deviceId) {
+    try {
+        const res = await fetch(`http://localhost:8000/history/${deviceId}`);
+        if (!res.ok) throw new Error(`Failed to fetch history for ${deviceId}`);
+
+        const data = await res.json();
+        if (data.length < 2) return; // Not enough data
+
+        const now = new Date();
+        const past24h = new Date(now.getTime() - 24*60*60*1000);
+
+        // Find reading closest to 24h ago
+        let closest = data[0];
+        for (let r of data) {
+            const ts = new Date(r.timestamp);
+            if (Math.abs(ts - past24h) < Math.abs(new Date(closest.timestamp) - past24h)) {
+                closest = r;
+            }
+        }
+
+        const latestTDS = data[data.length-1].tds_value;
+        const pastTDS = closest.tds_value;
+
+        // Change rate in ppm/day
+        const diff = (latestTDS - pastTDS).toFixed(1);
+        const sign = diff >= 0 ? "+" : "";
+
+        // Update the element
+        const tdsChangeElement = document.getElementById(`tdsChangeRate-${deviceId}`);
+        if (tdsChangeElement) {
+            tdsChangeElement.textContent = `${sign}${diff} ppm/day`;
+        }
+
+    } catch (err) {
+        console.error(`Error updating TDS change rate for ${deviceId}:`, err);
+    }
+}
+
+async function updateAllDevicesTDSChangeRate() {
+    const deviceIds = await fetchAllDeviceIds();
+    deviceIds.forEach(id => updateTDSChangeRate(id));
+}
+
+// Update every 1 second
+setInterval(updateAllDevicesTDSChangeRate, 1000);
+updateAllDevicesTDSChangeRate();
+
+
+// ==============================
+// IDEAL RANGE SETTINGS
+// ==============================
+// Grab input elements
+const phInput = document.getElementById("phRangeInput");
+const tempInput = document.getElementById("tempRangeInput");
+const tdsInput = document.getElementById("tdsRangeInput");
+
+// Grab spans on cards
+const phCardSpan = document.getElementById("phIdealRange");
+const tempCardSpan = document.getElementById("tempIdealRange");
+const tdsCardSpan = document.getElementById("tdsIdealRange");
+
+// Update button
+const updateRangesBtn = document.getElementById("updateRangesBtn");
+
+updateRangesBtn.addEventListener("click", () => {
+    // PH sensor – leave as-is
+    if (phInput.value.trim()) {
+        phCardSpan.textContent = phInput.value.trim();
+        localStorage.setItem("phRange", phInput.value.trim());
+    }
+
+    // Temperature sensor – append °C
+    if (tempInput.value.trim()) {
+        tempCardSpan.textContent = `${tempInput.value.trim()}°C`;
+        localStorage.setItem("tempRange", tempInput.value.trim());
+    }
+
+    // TDS sensor – append ppm
+    if (tdsInput.value.trim()) {
+        tdsCardSpan.textContent = `${tdsInput.value.trim()} ppm`;
+        localStorage.setItem("tdsRange", tdsInput.value.trim());
+    }
+});
+
+
+// Load saved ranges on page load
+document.addEventListener("DOMContentLoaded", () => {
+    if (localStorage.getItem("phRange")) phCardSpan.textContent = localStorage.getItem("phRange");
+    if (localStorage.getItem("tempRange")) tempCardSpan.textContent = `${localStorage.getItem("tempRange")}°C`;
+    if (localStorage.getItem("tdsRange")) tdsCardSpan.textContent = `${localStorage.getItem("tdsRange")} ppm`;
+});
+

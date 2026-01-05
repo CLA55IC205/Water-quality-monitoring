@@ -51,13 +51,4 @@ document.addEventListener('click', (e) => {
     }
 });
 
-/* Update map location */
-document.getElementById('updateLocation').addEventListener('click', () => {
-    const lat = parseFloat(document.getElementById('latInput').value);
-    const lng = parseFloat(document.getElementById('lngInput').value);
 
-    if (!isNaN(lat) && !isNaN(lng)) {
-        map.setView([lat, lng], 14);
-        L.marker([lat, lng]).addTo(map);
-    }
-});

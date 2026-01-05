@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from datetime import datetime, timedelta
 from sqlalchemy import desc
 from database import SessionLocal, engine
 from models import Base, MonitoringData, User, WaterBody
@@ -95,6 +94,26 @@ def get_latest_data(db: Session = Depends(get_db)):
 def get_monitoring_list(db: Session = Depends(get_db)):
     devices = db.query(MonitoringData.device_id).distinct().all()
     return [{"id": t[0]} for t in devices]
+
+# -------------------------
+# GLOBAL LATEST WATER QUALITY (FOR DASHBOARD)
+# -------------------------
+@app.get("/monitoring_data/latest")
+def get_global_latest(db: Session = Depends(get_db)):
+    record = (
+        db.query(MonitoringData)
+        .order_by(desc(MonitoringData.timestamp))
+        .first()
+    )
+
+    if not record:
+        raise HTTPException(status_code=404, detail="No monitoring data found")
+
+    return {
+        "ph_value": record.ph_value,
+        "tds_value": record.tds_value,
+        "temperature": record.temperature
+    }
 
 
 # -------------------------
