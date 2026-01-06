@@ -1,0 +1,36 @@
+/* Chart Card */
+
+
+/* Card Body */
+.temperature-chart-card .card-body {
+    padding: 12px;
+    height: 100%;
+}
+
+/* Title */
+.temperature-chart-card .card-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #93c5fd;
+    margin-bottom: 8px;
+}
+
+/* Chart Wrapper */
+.chart-wrapper {
+    position: relative;
+    height: 260px;
+    width: 100%;
+}
+
+/* Smooth rendering */
+canvas {
+    image-rendering: auto;
+}
+
+
+
+
+
+
+
+

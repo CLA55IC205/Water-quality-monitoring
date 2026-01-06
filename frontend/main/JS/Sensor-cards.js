@@ -1,9 +1,9 @@
 // ==============================
 // GLOBAL SENSOR VALUES
 // ==============================
-let phValue = 7.0;
-let tempValue = 33;
-let tdsValue = 300;
+let phValue = 0;
+let tempValue = 0;
+let tdsValue = 0;
 
 let phAlertActive = false;
 let tempAlertActive = false;
@@ -239,9 +239,9 @@ async function fetchLatestData() {
 // INIT
 // ==============================
 document.addEventListener("DOMContentLoaded", () => {
-    phChart = createSensorChart("phChart", 7, 5, 8, "#3498db");
-    tempChart = createSensorChart("tempChart", 25, 15, 40, "#e74c3c");
-    tdsChart = createSensorChart("tdsChart", 300, 0, 1500, "#2ecc71");
+    phChart = createSensorChart("phChart", 0, 5, 8, "#3498db");
+    tempChart = createSensorChart("tempChart", 0, 15, 40, "#e74c3c");
+    tdsChart = createSensorChart("tdsChart", 0, 0, 1500, "#2ecc71");
 
     setInterval(fetchLatestData, 1000); // Every 30 seconds
     fetchLatestData();
