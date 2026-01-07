@@ -24,6 +24,9 @@
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
 
+     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+
+
          <!-- CSS files -->
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/Sensor-cards.css">
@@ -329,9 +332,9 @@
             REPORTS CONTENT
         ================================ -->  
             <div class="tab-pane fade" id="reports">
-                            <!-- LINE CHART -->
-                <!-- Temperature Activity Chart -->
-                <div class="card temperature-chart-card">
+
+                <!-- Temperature -->
+                <div class="card temperature-chart-card mb-3">
                     <div class="card-body">
                         <h6 class="card-title">Temperature Activity Over Time</h6>
                         <div class="chart-wrapper">
@@ -339,7 +342,37 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- pH & TDS Side-by-Side -->
+                <div class="row g-3">
+
+                    <!-- pH Chart -->
+                    <div class="col-md-6">
+                        <div class="card temperature-chart-card mb-3">
+                            <div class="card-body">
+                                <h6 class="card-title">pH Activity Over Time</h6>
+                                <div class="chart-wrapper">
+                                    <canvas id="phLineChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TDS Chart -->
+                    <div class="col-md-6">
+                        <div class="card temperature-chart-card mb-3">
+                            <div class="card-body">
+                                <h6 class="card-title">TDS Activity Over Time</h6>
+                                <div class="chart-wrapper">
+                                    <canvas id="tdsLineChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+
 </div>
 
 

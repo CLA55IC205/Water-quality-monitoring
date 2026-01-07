@@ -243,7 +243,7 @@ document.addEventListener("DOMContentLoaded", () => {
     tempChart = createSensorChart("tempChart", 0, 15, 40, "#e74c3c");
     tdsChart = createSensorChart("tdsChart", 0, 0, 1500, "#2ecc71");
 
-    setInterval(fetchLatestData, 1000); // Every 30 seconds
+    setInterval(fetchLatestData, 5000); // Every 5 seconds
     fetchLatestData();
 });
 
@@ -283,8 +283,8 @@ async function updateAllDevices24hChange() {
     deviceIds.forEach(id => update24hTemperatureChange(id));
 }
 
-// Call every 1 second
-setInterval(updateAllDevices24hChange, 1000);
+// Call every 5 seconds
+setInterval(updateAllDevices24hChange, 5000);
 
 // Initial call on page load
 updateAllDevices24hChange();
@@ -372,8 +372,8 @@ async function updateAllDevicesStability() {
     deviceIds.forEach(id => updateStability(id));
 }
 
-// Call every 1 second
-setInterval(updateAllDevicesStability, 1000);
+// Call every 5 seconds
+setInterval(updateAllDevicesStability, 5000);
 updateAllDevicesStability();
 
 
@@ -424,8 +424,8 @@ async function updateAllDevicesTDSChangeRate() {
     deviceIds.forEach(id => updateTDSChangeRate(id));
 }
 
-// Update every 1 second
-setInterval(updateAllDevicesTDSChangeRate, 1000);
+// Update every 5 seconds
+setInterval(updateAllDevicesTDSChangeRate, 5000);
 updateAllDevicesTDSChangeRate();
 
 
