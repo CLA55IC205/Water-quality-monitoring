@@ -26,6 +26,15 @@
 
      <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
 
+        <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-..."
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+    />
+
+
 
          <!-- CSS files -->
     <link rel="stylesheet" href="css/base.css">
@@ -301,12 +310,12 @@
                         <div class="status-group">
                             <div class="status-item">
                                 <div class="icon-container">
-                                    <span class="icon">🔋</span>
+                                    <span class="icon"><i class="fa-solid fa-battery-full"></i></span>
                                 </div>
                                 <div class="status-info">
                                     <span class="label">Battery Life</span>
                                     <div class="battery-meta">
-                                        <span id="batteryValue" class="value-text good">85%</span>
+                                        <span id="batteryValue" class="value-text good">0%</span>
                                         <div class="battery-bar-container">
                                             <div id="batteryLevel" class="battery-fill" style="width: 85%;"></div>
                                         </div>
@@ -316,11 +325,11 @@
 
                             <div class="status-item">
                                 <div class="icon-container">
-                                    <span class="icon">📶</span>
+                                    <span class="icon"> <i class="fa-solid fa-signal"></i></span>
                                     <span class="pulse-dot"></span> </div>
                                 <div class="status-info">
                                     <span class="label">Network Strength</span>
-                                    <span id="signalStatus" class="value-text">Excellent (LTE)</span>
+                                    <span id="signalStatus" class="value-text">Checking...(LTE)</span>
                                 </div>
                             </div>
                         </div>
