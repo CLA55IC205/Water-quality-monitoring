@@ -321,7 +321,12 @@
 }
 
 /* Descriptive Overview Cards */
-.card {
+
+@media (min-width: 768px) {
+    #quickStats {
+        display: none !important;
+
+    .card {
     border: none;
     border-left: 4px solid #007bff; /* Color accent */
     border-radius: 8px;
@@ -329,9 +334,12 @@
     transition: transform 0.2s;
 }
 
-.card:hover {
+    .card:hover {
     transform: translateY(-2px);
 }
+    }
+}
+
 
 .card-title {
     color: #495057;
