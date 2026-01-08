@@ -18,9 +18,9 @@ DEVICES = [
 def generate_sensor_data():
     """Generate random water quality sensor data"""
     return {
-        "ph_value": round(random.uniform(6.5, 8.5), 2),
-        "tds_value": round(random.uniform(100, 500), 1),  # ppm
-        "temperature": round(random.uniform(20, 30), 1)   # Celsius
+        "ph_value": round(random.uniform(5.0, 9.5), 2),
+        "tds_value": round(random.uniform(100, 1000), 1),  # ppm
+        "temperature": round(random.uniform(18, 35), 1)   # Celsius
     }
 
 def send_device_data(device):

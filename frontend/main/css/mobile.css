@@ -1,0 +1,413 @@
+/* ===============================
+   MOBILE VIEW (TABLETS & PHONES)
+   =============================== */
+@media (max-width: 768px) {
+
+    /* General spacing */
+    .tab-content {
+        padding: 0 12px;
+    }
+
+    /* Sensor container becomes single column */
+    .sensor-container {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    /* Sensor cards full width */
+    .sensor-card {
+        width: 100%;
+        padding: 14px;
+        border-radius: 16px;
+    }
+
+    /* Header layout tightening */
+    .sensor-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .sensor-icon {
+        min-width: 42px;
+        height: 42px;
+        font-size: 14px;
+    }
+
+    .sensor-name {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .sensor-unit,
+    .sensor-status {
+        font-size: 12px;
+    }
+
+    /* Chart & info stack vertically */
+    .chart-row {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-top: 12px;
+    }
+
+    /* Chart container */
+    .chart-container {
+        width: 100%;
+        min-height: 220px;
+        position: relative;
+    }
+
+    canvas {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    /* Percentage overlay */
+    .percentage-display {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 18px;
+        text-align: center;
+    }
+
+    .percentage-label {
+        font-size: 12px;
+    }
+
+    /* Info strip full width */
+    .info-strip {
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .strip-title {
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .status-item {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+
+    /* Bottom section stacks vertically */
+    .bottom-row {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 20px;
+    }
+
+
+    .map-card h3,
+    .details-card h3 {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    /* Battery & system health tweaks */
+    .status-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .status-info .label {
+        font-size: 12px;
+    }
+
+    .value-text {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+
+  /* Kill Bootstrap column behavior */
+  .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  [class*="col-"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+
+}
+
+/* Hide map and system health in dashboard on mobile */
+@media (max-width: 767px) {
+    #dashboard .bottom-row {
+        display: none;
+    }
+}
+
+
+/* Default: Show mobile, hide desktop */
+.desktop-only {
+    display: none;
+}
+
+.mobile-only {
+    display: block;
+}
+
+/* For larger screens: Show desktop, hide mobile */
+@media (min-width: 768px) {
+    .desktop-only {
+        display: block;
+    }
+    
+    .mobile-only {
+        display: none;
+    }
+}
+/* Hide quick stats sidebar on desktop */
+@media (min-width: 768px) {
+    #quickStats {
+        display: none !important;
+    }
+}
+
+/* Add these styles to your CSS file */
+.account-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.card {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.form-switch .form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.avatar-circle {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.input-group-text {
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.input-group-text:hover {
+    color: #0d6efd !important;
+}
+
+.list-group-item:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+/* Password strength indicator (optional) */
+.password-strength {
+    height: 4px;
+    width: 100%;
+    background: #e9ecef;
+    margin-top: 5px;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.password-strength::after {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: #28a745;
+    transition: width 0.3s;
+}
+
+
+/* ===============================
+      LARGE MAP CARD STYLES
+   =============================== */
+   /* Container Card Styling */
+
+
+.details-card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f8f9fa;
+    padding-bottom: 10px;
+}
+
+/* Status Item Layout */
+.status-group {
+    display: flex;
+    flex-direction: column;
+    width : 100%;
+    gap: 20px;
+}
+
+.status-item {
+    display: flex;
+    gap: 15px;
+}
+
+.icon-container {
+    width: 40px;
+    height: 40px;
+    background: #f0f7ff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #007bff;
+    position: relative;
+}
+
+/* Battery Bar Styling */
+.battery-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.battery-bar-container {
+    width: 100px;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.battery-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #28a745, #5ddc74);
+    transition: width 0.5s ease-in-out;
+}
+
+/* Signal Pulse Animation */
+.pulse-dot {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 8px;
+    height: 8px;
+    background: #28a745;
+    border-radius: 50%;
+}
+
+.pulse-dot::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(3); opacity: 0; }
+}
+
+/* Descriptive Overview Cards */
+.card {
+    border: none;
+    border-left: 4px solid #007bff; /* Color accent */
+    border-radius: 8px;
+    background: #f8f9fa;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.card-title {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.value-text {
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.good { color: #28a745; }
+.label { font-size: 0.85rem; color: #6c757d; display: block; }
+
+/* Workflow Card Styling */
+.workflow-card {
+    border-left: 4px solid #17a2b8 !important; /* Teal accent for info */
+    background: #ffffff;
+}
+
+.workflow-steps {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+}
+
+.step {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.step-number {
+    background: #17a2b8;
+    color: white;
+    min-width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-top: 3px;
+}
+
+.step-content strong {
+    display: block;
+    font-size: 0.9rem;
+    color: #2c3e50;
+}
+
+.step-content p {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 0;
+    line-height: 1.4;
+}
+
+/* The vertical line between numbers */
+.step-connector {
+    width: 2px;
+    height: 15px;
+    background: #e9ecef;
+    margin-left: 11px; /* Centers the line under the number */
+}
+
+/* Pulse effect for the 'Visualization' step to show it's live */
+.step:last-child .step-number {
+    animation: pulse-blue 2s infinite;
+}
+
+@keyframes pulse-blue {
+    0% { box-shadow: 0 0 0 0 rgba(23, 162, 184, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(23, 162, 184, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(23, 162, 184, 0); }
+}

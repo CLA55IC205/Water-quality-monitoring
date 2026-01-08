@@ -60,6 +60,33 @@ async function initMap() {
 }
 
 // ----------------------------
+// REINIT MAP FUNCTION (for later use)
+
+let mapLocation, markerLocation;
+
+async function initLocationMap() {
+    // Load last saved location from backend
+    const saved = await loadLocationFromBackend(deviceId);
+    const lat = saved?.latitude ?? defaultCoords.lat;
+    const lng = saved?.longitude ?? defaultCoords.lng;
+
+    // Set input fields
+    document.getElementById('latInput').value = lat;
+    document.getElementById('lngInput').value = lng;
+
+    // Initialize Leaflet map
+    mapLocation = L.map('mapLocation').setView([lat, lng], 13);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap'
+    }).addTo(mapLocation);
+    // Single reusable marker
+    markerLocation = L.marker([lat, lng]).addTo(mapLocation);
+    markerLocation.bindPopup(`<b>Water Body Location</b><br>Lat: ${lat}<br>Lng: ${lng}`).openPopup();
+}
+
+
+// ----------------------------
 // HANDLE UPDATE LOCATION
 // ----------------------------
 document.getElementById('updateLocation').addEventListener('click', async () => {
@@ -76,11 +103,22 @@ document.getElementById('updateLocation').addEventListener('click', async () => 
     marker.bindPopup(`<b>Water Body Location</b><br>Lat: ${lat}<br>Lng: ${lng}`).openPopup();
     map.flyTo([lat, lng], 15);
 
+    // Update marker on map
+    markerLocation.setLatLng([lat, lng]);
+    markerLocation.bindPopup(`<b>Water Body Location</b><br>Lat: ${lat}<br>Lng: ${lng}`).openPopup();
+    mapLocation.flyTo([lat, lng], 15);
+
     // Save to backend
     await saveLocationToBackend(deviceId, lat, lng);
 });
 
+
+
+// Initialize map on page load
+window.addEventListener('load', initLocationMap);
+window.addEventListener('load', initMap);
 // ----------------------------
-// INIT
-// ----------------------------
-initMap();
+
+
+
+

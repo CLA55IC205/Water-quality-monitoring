@@ -235,46 +235,6 @@
             border-top: 1px solid #eee;
         }
         
-        /* Responsive design */
-        @media (max-width: 1200px) {
-            .sensor-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .sensor-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .chart-row {
-                flex-direction: column;
-                gap: 8px;
-            }
-            
-            .chart-container {
-                flex: 0 0 120px;
-                width: 100%;
-            }
-            
-            .info-strip {
-                width: 100%;
-            }
-            
-            body {
-                padding: 10px;
-            }
-            
-            .dashboard-container {
-                padding: 15px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .sensor-values {
-                grid-template-columns: 1fr;
-            }
-        }
 
 
 

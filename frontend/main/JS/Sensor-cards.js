@@ -123,10 +123,10 @@ function updateFilterStatus(val) {
 
     filterIcon.className = "filter-icon";
 
-    if (val <= 700) {
+    if (val <= 500) {
         filterIcon.textContent = "🍃";
         filterIcon.classList.add("optimal");
-    } else if (val <= 1000) {
+    } else if (val <= 700) {
         filterIcon.textContent = "⚠️";
         filterIcon.classList.add("moderate");
     } else {
@@ -178,7 +178,9 @@ function createSensorChart(canvasId, value, min, max, color) {
         },
         options: {
             plugins: { legend: { display: false } },
-            animation: { duration: 1200 }
+            animation: { duration: 1200 },
+            responsive: true,
+            maintainAspectRatio: false,
         }
     });
 }
@@ -247,19 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchLatestData();
 });
 
-// ==============================
-// SIDEBAR
-// ==============================
-const toggle = document.getElementById("sidebarToggle");
-const overlay = document.getElementById("sidebarOverlay");
 
-toggle?.addEventListener("click", () => {
-    document.body.classList.toggle("sidebar-open");
-});
-
-overlay?.addEventListener("click", () => {
-    document.body.classList.remove("sidebar-open");
-});
 
 // ==============================
 // 24H CHANGE & STABILITY UPDATES
