@@ -6,7 +6,7 @@
 // =============================
 // DEVICE CONFIG
 // =============================
-#define DEVICE_ID "WATER_NODE_01"
+#define DEVICE_ID "device_001"
 
 // =============================
 // SENSOR PINS
@@ -48,12 +48,12 @@ void loop() {
   String jsonString = "{";
   jsonString += "\"device_id\":\"" + String(DEVICE_ID) + "\",";
   jsonString += "\"ph_value\":" + String(phValue, 2) + ",";
-  jsonString += "\"tds_value\":" + String(tdsValue, 0) + ",";
+  jsonString += "\"tds_value\":" + String(tdsValue, 1) + ",";
   jsonString += "\"temperature\":" + String(tempValue, 2);
   jsonString += "}";
 
   // Send JSON via Serial
   Serial.println(jsonString);
 
-  delay(2000);  // Send every 2 seconds
+  delay(5000);  // Send every 2 seconds
 }
