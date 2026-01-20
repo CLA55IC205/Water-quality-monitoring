@@ -68,77 +68,112 @@ function playNotificationSound() {
     }
 }
 
+function getStoredRange(key) {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+
+    const parts = raw.split("-").map(v => parseFloat(v.trim()));
+    if (parts.length !== 2 || parts.some(isNaN)) return null;
+
+    return {
+        min: parts[0],
+        max: parts[1]
+    };
+}
+
+
 // ==============================
 // STATUS ICON UPDATERS
 // ==============================
 function updatePhStatus(val) {
 
     phAlertActive = false;
-
     phStatusIcon.className = "filter-icon";
 
-    if (val >= 6.5 && val <= 7.5) {
+    const range = getStoredRange("phRange");
+    if (!range) return;
+
+    const { min, max } = range;
+
+    if (val >= min && val <= max) {
         phStatusIcon.textContent = "🍃";
         phStatusIcon.classList.add("optimal");
-    } else if (val > 7.5 && val <= 8.0) {
+    }
+    else if (
+        (val >= min - 0.5 && val < min) ||
+        (val > max && val <= max + 0.5)
+    ) {
         phStatusIcon.textContent = "⚠️";
         phStatusIcon.classList.add("moderate");
-    } else {
-    phStatusIcon.textContent = "🚨";
-    phStatusIcon.classList.add("warning");
+    }
+    else {
+        phStatusIcon.textContent = "🚨";
+        phStatusIcon.classList.add("warning");
 
-        if (!phAlertActive) {
-            addNotification("pH Level Alert", `pH is ${val}`);
-            phAlertActive = true;
-        }
+        addNotification("pH Level Alert", `pH is ${val}`);
+        phAlertActive = true;
     }
 }
+
 
 function updateHeatStatus(val) {
 
     tempAlertActive = false;
-
     heatStatusIcon.className = "filter-icon";
 
-    if (val <= 25) {
+    const range = getStoredRange("tempRange");
+    if (!range) return;
+
+    const { min, max } = range;
+
+    if (val >= min && val <= max) {
         heatStatusIcon.textContent = "🍃";
         heatStatusIcon.classList.add("optimal");
-    } else if (val <= 30) {
+    }
+    else if (
+        (val >= min - 2 && val < min) ||
+        (val > max && val <= max + 2)
+    ) {
         heatStatusIcon.textContent = "⚠️";
         heatStatusIcon.classList.add("moderate");
-    } else {
-    heatStatusIcon.textContent = "🚨";
-    heatStatusIcon.classList.add("warning");
+    }
+    else {
+        heatStatusIcon.textContent = "🚨";
+        heatStatusIcon.classList.add("warning");
 
-        if (!tempAlertActive) {
-            addNotification("High Temperature", `Temperature is ${val}°C`);
-            tempAlertActive = true;
-        }
+        addNotification("Temperature Alert", `Temperature is ${val}°C`);
+        tempAlertActive = true;
     }
 }
+
 
 function updateFilterStatus(val) {
 
     tdsAlertActive = false;
-
     filterIcon.className = "filter-icon";
 
-    if (val <= 500) {
+    const range = getStoredRange("tdsRange");
+    if (!range) return;
+
+    const { min, max } = range;
+
+    if (val >= min && val <= max) {
         filterIcon.textContent = "🍃";
         filterIcon.classList.add("optimal");
-    } else if (val <= 700) {
+    }
+    else if (val > max && val <= max + 200) {
         filterIcon.textContent = "⚠️";
         filterIcon.classList.add("moderate");
-    } else {
-    filterIcon.textContent = "🚨";
-    filterIcon.classList.add("warning");
+    }
+    else {
+        filterIcon.textContent = "🚨";
+        filterIcon.classList.add("warning");
 
-        if (!tdsAlertActive) {
-            addNotification("High TDS Warning", `TDS is ${val} ppm`);
-            tdsAlertActive = true;
-        }
+        addNotification("High TDS Warning", `TDS is ${val} ppm`);
+        tdsAlertActive = true;
     }
 }
+
 
 // ==============================
 // CHART HELPERS
@@ -453,6 +488,12 @@ updateRangesBtn.addEventListener("click", () => {
         tdsCardSpan.textContent = `${tdsInput.value.trim()} ppm`;
         localStorage.setItem("tdsRange", tdsInput.value.trim());
     }
+
+    // Re-evaluate current sensor values immediately
+    updatePhStatus(currentPhValue);
+    updateHeatStatus(currentTempValue);
+    updateFilterStatus(currentTdsValue);
+
 });
 
 

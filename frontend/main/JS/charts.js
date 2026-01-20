@@ -7,7 +7,7 @@ let temperatureChart = null;
 ---------------------------- */
 const CONFIG = {
     API_BASE_URL: "http://localhost:8000",
-    REFRESH_INTERVAL: 10000, // 30 seconds
+    REFRESH_INTERVAL: 5000, // 30 seconds
     CHART_OPTIONS: {
         responsive: true,
         maintainAspectRatio: false,

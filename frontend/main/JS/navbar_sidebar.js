@@ -91,7 +91,7 @@ tabButtons.forEach((btn) => {
         sidebar.classList.remove("active");
         overlay.classList.remove("active");
 
-        // 🔥 Force charts to resize AFTER tab becomes visible
+        //  Force charts to resize AFTER tab becomes visible
         setTimeout(resizeAllCharts, 200);
     });
 });
